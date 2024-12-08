@@ -23,6 +23,17 @@ if (EXISTS ${picoVscode})
     include(${picoVscode})
 endif()
 # ====================================================================================
+
+# Haven't managed to get this bit working - if you don't have the VSCode Pi Pico extension
+# but have the toolchain separately downloaded, and the SDK at a location with the right
+# environment variable PICO_SDK set. Picotool just doesn't build correctly - seems to be
+# a recent change in the SDK that's broken this, bsp/board_api.h is missing?
+if (NOT EXISTS ${picoVscode})
+    set(CMAKE_C_COMPILER /usr/bin/arm-none-eabi-gcc)
+    set(CMAKE_CXX_COMPILER /usr/bin/arm-none-eabi-g++)
+    set(PICOTOOL_FORCE_FETCH_FROM_GIT 1)
+endif()
+
 set(PICO_BOARD pico CACHE STRING "Board type")
 
 # Pull in Raspberry Pi Pico SDK (must be before project)
