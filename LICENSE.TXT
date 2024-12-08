@@ -1,6 +1,12 @@
 The MIT License (MIT)
 
-Copyright (c) 2018, hathach (tinyusb.org)
+Copyright (c) 2024, Matt Gumbley (matt.gumbley@devzendo.org)
+
+Based on cdc_uac2 example from TinyUSB:
+Copyright (c) 2018-2023, hathach (tinyusb.org),
+Angel Molina (angelmolinu@gmail.com), Jerzy Kasenberg,
+Dhiru Kholia <dhiru.kholia@gmail.com>
+ 
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
