@@ -20,10 +20,11 @@ Eventually you'll need a handful of discrete components in addition to this.... 
 
 # Development
 I use Visual Studio Code (on macOS) connected remotely to a Linux Mint 21.3 (Ubuntu 22.04) PC.
+Or use Visual Studio Code directly on that PC.
 The project was set up using the Raspberry Pi Pico plugin.
 
 # Building
-Assuming a macOS or Linux host. Not catering for Windows building any time soon.
+Assuming a Linux host. Not catering for Windows building any time soon.
 
 Install the Pico SDK and toolchain:
 
@@ -48,7 +49,7 @@ Subsequent builds can just do `./build.sh`
 # License, Copyright & Contact info
 This code is released under the MIT License: https://mit-license.org/.
 
-(C) 2024 Matt J. Gumbley
+(C) 2024-2025 Matt J. Gumbley
 
 matt.gumbley@devzendo.org
 
