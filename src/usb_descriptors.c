@@ -78,6 +78,7 @@ uint8_t const * tud_descriptor_device_cb(void)
 //--------------------------------------------------------------------+
 #define CONFIG_TOTAL_LEN    	(TUD_CONFIG_DESC_LEN + CFG_TUD_AUDIO * TUD_AUDIO_HEADSET_STEREO_DESC_LEN + CFG_TUD_CDC * TUD_CDC_DESC_LEN)
 
+// MJG: When expanding the number of CDC devices from 1 to 3, I only defined those endpoints needed for the Raspberry Pi Pico.
 #if CFG_TUSB_MCU == OPT_MCU_LPC175X_6X || CFG_TUSB_MCU == OPT_MCU_LPC177X_8X || CFG_TUSB_MCU == OPT_MCU_LPC40XX
   // LPC 17xx and 40xx endpoint type (bulk/interrupt/iso) are fixed by its number
   // 0 control, 1 In, 2 Bulk, 3 Iso, 4 In etc ...
@@ -111,9 +112,17 @@ uint8_t const * tud_descriptor_device_cb(void)
   #define EPNUM_AUDIO_IN    0x01
   #define EPNUM_AUDIO_OUT   0x01
 
-  #define EPNUM_CDC_NOTIF   0x83
-  #define EPNUM_CDC_OUT     0x04
-  #define EPNUM_CDC_IN      0x84
+  #define EPNUM_CDC_0_NOTIF 0x83
+  #define EPNUM_CDC_0_OUT   0x04
+  #define EPNUM_CDC_0_IN    0x84
+
+  #define EPNUM_CDC_1_NOTIF 0x85
+  #define EPNUM_CDC_1_OUT   0x06
+  #define EPNUM_CDC_1_IN    0x86
+
+  #define EPNUM_CDC_2_NOTIF 0x87
+  #define EPNUM_CDC_2_OUT   0x08
+  #define EPNUM_CDC_2_IN    0x88
 #endif
 
 uint8_t const desc_configuration[] =
@@ -124,8 +133,14 @@ uint8_t const desc_configuration[] =
     // Interface number, string index, EP Out & EP In address, EP size
     TUD_AUDIO_HEADSET_STEREO_DESCRIPTOR(2, EPNUM_AUDIO_OUT, EPNUM_AUDIO_IN | 0x80),
 
-    // CDC: Interface number, string index, EP notification address and size, EP data address (out, in) and size.
-    TUD_CDC_DESCRIPTOR(ITF_NUM_CDC, 6, EPNUM_CDC_NOTIF, 8, EPNUM_CDC_OUT, EPNUM_CDC_IN, 64)
+    // 1st CDC (diagnostics): Interface number, string index, EP notification address and size, EP data address (out, in) and size.
+    TUD_CDC_DESCRIPTOR(ITF_NUM_CDC_0, 6, EPNUM_CDC_0_NOTIF, 8, EPNUM_CDC_0_OUT, EPNUM_CDC_0_IN, 64),
+
+    // 2nd CDC (user interface): Interface number, string index, EP notification address and size, EP data address (out, in) and size.
+    TUD_CDC_DESCRIPTOR(ITF_NUM_CDC_1, 7, EPNUM_CDC_1_NOTIF, 8, EPNUM_CDC_1_OUT, EPNUM_CDC_1_IN, 64),
+
+    // 1st CDC (diagnostics): Interface number, string index, EP notification address and size, EP data address (out, in) and size.
+    TUD_CDC_DESCRIPTOR(ITF_NUM_CDC_2, 8, EPNUM_CDC_2_NOTIF, 8, EPNUM_CDC_2_OUT, EPNUM_CDC_2_IN, 64)
 };
 
 // Invoked when received GET CONFIGURATION DESCRIPTOR
@@ -158,7 +173,9 @@ char const *string_desc_arr[] =
   NULL,                          // 3: Serials will use unique ID if possible
   "onni Speakers",               // 4: Audio Interface
   "onni Microphone",             // 5: Audio Interface
-  "onni CDC",                    // 6: Audio Interface ??? Serial
+  "onni Serial Diagnostics",     // 6: Serial Interface (diagnostics)
+  "onni Serial User Interface",  // 7: Serial Interface (user interface)
+  "onni Serial KISS Modem",      // 8: Serial Interface (KISS modem)
 };
 
 static uint16_t _desc_str[32 + 1];

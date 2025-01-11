@@ -41,6 +41,17 @@ void tud_cdc_line_state_cb(uint8_t itf, bool dtr, bool rts)
   else
   {
     // Terminal disconnected
+    
+    // touch1200 only with first CDC instance (Serial)
+    if (itf == 0) {
+      cdc_line_coding_t coding;
+      tud_cdc_get_line_coding(&coding);
+      if (coding.bit_rate == 1200) {
+        if (board_reset_to_bootloader) {
+          board_reset_to_bootloader();
+        }
+      }
+    }
   }
 }
 
@@ -48,17 +59,20 @@ void tud_cdc_line_state_cb(uint8_t itf, bool dtr, bool rts)
 void tud_cdc_rx_cb(uint8_t itf)
 {
   uint8_t buf[64];
+  uint8_t hdr[32];
   uint32_t count;
 
   // connected() check for DTR bit
   // Most but not all terminal client set this when making connection
-  if (tud_cdc_connected())
+  if (tud_cdc_n_connected(itf))
   {
-    if (tud_cdc_available()) // data is available
+    if (tud_cdc_n_available(itf)) // data is available
     {
       count = tud_cdc_n_read(itf, buf, sizeof(buf));
       (void) count;
 
+      sprintf((char * restrict) &hdr, "/dev/ttyACM%d\r\n", itf);
+      tud_cdc_n_write(itf, hdr, strlen(hdr));
       tud_cdc_n_write(itf, buf, count);
       tud_cdc_n_write_flush(itf);
       // dummy code to check that cdc serial is responding
