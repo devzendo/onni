@@ -152,13 +152,13 @@ enum {
 // array of pointer to string descriptors
 char const *string_desc_arr[] =
 {
-  (const char[]) { 0x09, 0x04 },  // 0: is supported language is English (0x0409)
-  "TinyUSB",                      // 1: Manufacturer
-  "TinyUSB headset",              // 2: Product
-  NULL,                           // 3: Serials will use unique ID if possible
-  "TinyUSB Speakers",             // 4: Audio Interface
-  "TinyUSB Microphone",           // 5: Audio Interface
-  "TinyUSB CDC",                  // 6: Audio Interface
+  (const char[]) { 0x09, 0x04 }, // 0: is supported language is English (0x0409)
+  "devzendo.org",                // 1: Manufacturer
+  "onni",                        // 2: Product
+  NULL,                          // 3: Serials will use unique ID if possible
+  "onni Speakers",               // 4: Audio Interface
+  "onni Microphone",             // 5: Audio Interface
+  "onni CDC",                    // 6: Audio Interface ??? Serial
 };
 
 static uint16_t _desc_str[32 + 1];
