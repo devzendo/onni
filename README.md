@@ -44,6 +44,17 @@ To build:
 
 Subsequent builds can just do `./build.sh`
 
+# Deployment
+Usual Pi Pico steps, hold down BOOTSEL button, connect. File browser appears. Drag `build/onni.uf2`
+to the 'RPI-RP2' drive. The Pico will then reboot into the onni firmware.
+
+Looking in `/var/log/kern.log` will show a USB audio and CDC (serial) device(s).
+
+You will need to add your user to the `dialout` group in order to connect to the serial device(s):
+`sudo adduser matt dialout` then log out/in.
+
+Install `minicom`, and connect to onni's diagnostic output serial port with:
+`minicom -b 115200 -o -D /dev/ttyACM0`
 
 
 # License, Copyright & Contact info
