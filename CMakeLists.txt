@@ -53,7 +53,7 @@ add_executable(onni)
 target_sources(onni PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/src/main.c
         ${CMAKE_CURRENT_LIST_DIR}/src/cdc_app.c
-        # ${CMAKE_CURRENT_LIST_DIR}/src/uac2_app.c
+        ${CMAKE_CURRENT_LIST_DIR}/src/uac2_app.c
         ${CMAKE_CURRENT_LIST_DIR}/src/usb_descriptors.c
         )
 
