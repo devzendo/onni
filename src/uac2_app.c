@@ -42,8 +42,6 @@ uint32_t current_sample_rate  = 44100;
 
 #define N_SAMPLE_RATES  TU_ARRAY_SIZE(sample_rates)
 
-uint32_t blink_interval_ms = BLINK_NOT_MOUNTED;
-
 // Audio controls
 // Current states
 int8_t mute[CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX + 1];       // +1 for master channel 0
@@ -59,6 +57,9 @@ int spk_data_size;
 const uint8_t resolutions_per_format[CFG_TUD_AUDIO_FUNC_1_N_FORMATS] = {CFG_TUD_AUDIO_FUNC_1_FORMAT_1_RESOLUTION_RX};
 // Current resolution, update on format change
 uint8_t current_resolution;
+
+extern uint32_t blink_interval_ms;
+
 
 // Helper for clock get requests
 static bool tud_audio_clock_get_request(uint8_t rhport, audio_control_request_t const *request)
@@ -299,18 +300,3 @@ bool tud_audio_tx_done_pre_load_cb(uint8_t rhport, uint8_t itf, uint8_t ep_in, u
   return true;
 }
 
-//--------------------------------------------------------------------+
-// BLINKING TASK
-//--------------------------------------------------------------------+
-void led_blinking_task(void)
-{
-  static uint32_t start_ms = 0;
-  static bool led_state = false;
-
-  // Blink every interval ms
-  if (board_millis() - start_ms < blink_interval_ms) return;
-  start_ms += blink_interval_ms;
-
-  board_led_write(led_state);
-  led_state = 1 - led_state;
-}
