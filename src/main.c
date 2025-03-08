@@ -32,13 +32,27 @@
 #include "tusb.h"
 #include "common.h"
 
-extern uint32_t blink_interval_ms;
-
 #if (CFG_TUSB_MCU == OPT_MCU_RP2040)
 #include "pico/stdlib.h"
 #endif
 
-void led_blinking_task(void);
+uint32_t blink_interval_ms = BLINK_NOT_MOUNTED;
+
+//--------------------------------------------------------------------+
+// BLINKING TASK
+//--------------------------------------------------------------------+
+void led_blinking_task(void)
+{
+  static uint32_t start_ms = 0;
+  static bool led_state = false;
+
+  // Blink every interval ms
+  if (board_millis() - start_ms < blink_interval_ms) return;
+  start_ms += blink_interval_ms;
+
+  board_led_write(led_state);
+  led_state = 1 - led_state;
+}
 
 /*------------- MAIN -------------*/
 int main(void)
