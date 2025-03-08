@@ -76,23 +76,23 @@ uint8_t const * tud_descriptor_device_cb(void)
 //--------------------------------------------------------------------+
 // Configuration Descriptor
 //--------------------------------------------------------------------+
-#define CONFIG_TOTAL_LEN    	(TUD_CONFIG_DESC_LEN + /*CFG_TUD_AUDIO * TUD_AUDIO_HEADSET_STEREO_DESC_LEN +*/ CFG_TUD_CDC * TUD_CDC_DESC_LEN)
+#define CONFIG_TOTAL_LEN    	(TUD_CONFIG_DESC_LEN + CFG_TUD_AUDIO * TUD_AUDIO_HEADSET_STEREO_DESC_LEN + CFG_TUD_CDC * TUD_CDC_DESC_LEN)
 
-// #define EPNUM_AUDIO_IN    0x01
-// #define EPNUM_AUDIO_OUT   0x01
+#define EPNUM_AUDIO_IN    0x01
+#define EPNUM_AUDIO_OUT   0x01
 
 // MJG: When expanding the number of CDC devices from 1 to 3, I only defined those endpoints needed for the Raspberry Pi Pico.
-#define EPNUM_CDC_0_NOTIF 0x81 // This conflicts with audio when audio is included. Why?
-#define EPNUM_CDC_0_OUT   0x02
-#define EPNUM_CDC_0_IN    0x82
+#define EPNUM_CDC_0_NOTIF 0x83
+#define EPNUM_CDC_0_OUT   0x04
+#define EPNUM_CDC_0_IN    0x84
 
-#define EPNUM_CDC_1_NOTIF 0x83
-#define EPNUM_CDC_1_OUT   0x04
-#define EPNUM_CDC_1_IN    0x84
+#define EPNUM_CDC_1_NOTIF 0x85
+#define EPNUM_CDC_1_OUT   0x06
+#define EPNUM_CDC_1_IN    0x86
 
-#define EPNUM_CDC_2_NOTIF 0x85
-#define EPNUM_CDC_2_OUT   0x05
-#define EPNUM_CDC_2_IN    0x86
+#define EPNUM_CDC_2_NOTIF 0x87
+#define EPNUM_CDC_2_OUT   0x08
+#define EPNUM_CDC_2_IN    0x88
 
 uint8_t const desc_configuration[] =
 {
@@ -100,7 +100,7 @@ uint8_t const desc_configuration[] =
     TUD_CONFIG_DESCRIPTOR(1, ITF_NUM_TOTAL, 0, CONFIG_TOTAL_LEN, 0x00, 100),
 
     // Interface number, string index, EP Out & EP In address, EP size
-    // TUD_AUDIO_HEADSET_STEREO_DESCRIPTOR(2, EPNUM_AUDIO_OUT, EPNUM_AUDIO_IN | 0x80),
+    TUD_AUDIO_HEADSET_STEREO_DESCRIPTOR(2, EPNUM_AUDIO_OUT, EPNUM_AUDIO_IN | 0x80),
 
     // 1st CDC (diagnostics): Interface number, string index, EP notification address and size, EP data address (out, in) and size.
     TUD_CDC_DESCRIPTOR(ITF_NUM_CDC_0, 6, EPNUM_CDC_0_NOTIF, 8, EPNUM_CDC_0_OUT, EPNUM_CDC_0_IN, 64),
@@ -140,8 +140,8 @@ char const *string_desc_arr[] =
   "devzendo.org",                // 1: Manufacturer
   "onni",                        // 2: Product
   NULL,                          // 3: Serials will use unique ID if possible
-  // "onni Speakers",               // 4: Audio Interface
-  // "onni Microphone",             // 5: Audio Interface
+  "onni Speakers",               // 4: Audio Interface
+  "onni Microphone",             // 5: Audio Interface
   "onni Serial Diagnostics",     // 6: Serial Interface (diagnostics)
   "onni Serial User Interface",  // 7: Serial Interface (user interface)
   "onni Serial KISS Modem",      // 8: Serial Interface (KISS modem)
