@@ -3,6 +3,30 @@
 ## What is this?
 A Raspberry Pi Pico experiment. Not much to see here yet!
 
+The intention is to build a triple-mode interface between a computer and an amateur radio
+transceiver. The three possible modes are (intended to be):
+1. A sound card. Audio from the computer causes the transceiver's PTT (Push To Talk button)
+   to be activated, and the audio transmitted on the current frequency. When the audio from
+   the computer stops, the received audio from the transceiver is sent to the computer. This
+   allows the use of software such as WSJT-X, Direwolf, etc. This is similar to the Digirig
+   or Tigertronics Signalink interface.
+2. A KISS modem. Packet software running on the computer uses the board to send/receive
+   packets encapsulated in the KISS protocol. The board activates PTT and modulates the
+   data in the appropriate form. Packets received and demodulated are sent to the computer
+   in KISS frames. This is similar to the Mobilinkd TNC interface, and can be used with
+   Direwolf and APRS software.
+3. A standalone TNC (Terminal Node Controller). The user interface is used to issue connections
+   to remote AX25 nodes, send beacons, digipeat, and access the mailbox. Like the TNCs of the
+   80's. The board handles PTT and modulation as in mode 2, but has a complete AX25 stack and
+   applications embedded.
+
+It presents an audio (mic, stereo speakers) interface and two CDC 'serial' ports.
+The audio interface acts as a sound card; the two serial ports are for:
+
+* The text-based user interface. Connect to it with a decent VT100 terminal emulator such as
+  minicom or PuTTy.
+* A KISS (Keep It Simple, Stupid) interface.
+
 ## Project Status
 Started Nov 2024. Feasibility, building prototypes to reduce risk and develop understanding. 
 
