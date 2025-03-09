@@ -90,9 +90,11 @@ uint8_t const * tud_descriptor_device_cb(void)
 #define EPNUM_CDC_1_OUT   0x06
 #define EPNUM_CDC_1_IN    0x86
 
-#define EPNUM_CDC_2_NOTIF 0x87
-#define EPNUM_CDC_2_OUT   0x08
-#define EPNUM_CDC_2_IN    0x88
+// MJG: Knock out the third serial port, as three ports WITHOUT audio still causes lockups. Have asked on the TinyUSB issue tracker
+// in github whether three are possible. 
+// #define EPNUM_CDC_2_NOTIF 0x87
+// #define EPNUM_CDC_2_OUT   0x08
+// #define EPNUM_CDC_2_IN    0x88
 
 uint8_t const desc_configuration[] =
 {
@@ -102,14 +104,14 @@ uint8_t const desc_configuration[] =
     // Interface number, string index, EP Out & EP In address, EP size
     TUD_AUDIO_HEADSET_STEREO_DESCRIPTOR(2, EPNUM_AUDIO_OUT, EPNUM_AUDIO_IN | 0x80),
 
-    // 1st CDC (diagnostics): Interface number, string index, EP notification address and size, EP data address (out, in) and size.
+    // 1st CDC (user interface): Interface number, string index, EP notification address and size, EP data address (out, in) and size.
     TUD_CDC_DESCRIPTOR(ITF_NUM_CDC_0, 6, EPNUM_CDC_0_NOTIF, 8, EPNUM_CDC_0_OUT, EPNUM_CDC_0_IN, 64),
 
-    // 2nd CDC (user interface): Interface number, string index, EP notification address and size, EP data address (out, in) and size.
+    // 2nd CDC (KISS modem): Interface number, string index, EP notification address and size, EP data address (out, in) and size.
     TUD_CDC_DESCRIPTOR(ITF_NUM_CDC_1, 7, EPNUM_CDC_1_NOTIF, 8, EPNUM_CDC_1_OUT, EPNUM_CDC_1_IN, 64),
 
-    // 1st CDC (diagnostics): Interface number, string index, EP notification address and size, EP data address (out, in) and size.
-    TUD_CDC_DESCRIPTOR(ITF_NUM_CDC_2, 8, EPNUM_CDC_2_NOTIF, 8, EPNUM_CDC_2_OUT, EPNUM_CDC_2_IN, 64)
+    // 3rd CDC (diagnostics): Interface number, string index, EP notification address and size, EP data address (out, in) and size.
+    // TUD_CDC_DESCRIPTOR(ITF_NUM_CDC_2, 8, EPNUM_CDC_2_NOTIF, 8, EPNUM_CDC_2_OUT, EPNUM_CDC_2_IN, 64)
 };
 
 // Invoked when received GET CONFIGURATION DESCRIPTOR
@@ -142,9 +144,9 @@ char const *string_desc_arr[] =
   NULL,                          // 3: Serials will use unique ID if possible
   "onni Speakers",               // 4: Audio Interface
   "onni Microphone",             // 5: Audio Interface
-  "onni Serial Diagnostics",     // 6: Serial Interface (diagnostics)
-  "onni Serial User Interface",  // 7: Serial Interface (user interface)
-  "onni Serial KISS Modem",      // 8: Serial Interface (KISS modem)
+  "onni Serial User Interface",  // 6: Serial Interface (user interface)
+  "onni Serial KISS Modem",      // 7: Serial Interface (KISS modem)
+  // "onni Serial Diagnostics",     // 8: Serial Interface (diagnostics)
 };
 
 static uint16_t _desc_str[32 + 1];
