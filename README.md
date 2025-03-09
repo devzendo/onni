@@ -63,6 +63,13 @@ Install the Pico SDK and toolchain:
     
     * CMake can be installed from apt, no need for a manual install.
 
+    * TinyUSB is used as a git submodule in `libs/tinyusb`, rather than the version
+      shipped with the Pico SDK - to fix various audio problems:
+      https://github.com/hathach/tinyusb/issues/628
+      https://github.com/hathach/tinyusb/pull/1802
+      https://github.com/hathach/tinyusb/issues/1911
+      I'm currently using commit 29ffd57237554b1f2339af543e3789ae04d3b29b (8 Mar 2025).
+
 To build:
 `./build.sh clean`
 

@@ -36,6 +36,9 @@ endif()
 
 set(PICO_BOARD pico CACHE STRING "Board type")
 
+# Use the submodule of tinyusb in preference to that in the Raspberry Pi Pico SDK
+set(PICO_TINYUSB_PATH ${CMAKE_CURRENT_LIST_DIR}/libs/tinyusb)
+
 # Pull in Raspberry Pi Pico SDK (must be before project)
 include(pico_sdk_import.cmake)
 
@@ -69,5 +72,8 @@ target_link_libraries(onni PUBLIC pico_stdlib pico_unique_id tinyusb_device tiny
 #target_compile_definitions(onni PUBLIC PICO_RP2040_USB_DEVICE_ENUMERATION_FIX=1)
 
 pico_add_extra_outputs(onni)
+
+pico_enable_stdio_usb(onni 1)
+pico_enable_stdio_uart(onni 0)
 
 # add url via pico_set_program_url
