@@ -10,7 +10,7 @@ fi
 if [ ! -d ${BUILDFOLDER} ]
 then
 	mkdir ${BUILDFOLDER}
-	cmake -DPICO_TINYUSB_PATH=./libs/tinyusb -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/arm-none-eabi-gcc -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/arm-none-eabi-g++ --no-warn-unused-cli -G "Unix Makefiles" -S. -B./${BUILDFOLDER}
+	cmake -DPICO_TINYUSB_PATH=./libs/tinyusb -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/arm-none-eabi-gcc -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/arm-none-eabi-g++ --no-warn-unused-cli -G "Unix Makefiles" -S. -B./${BUILDFOLDER} -DBUILD_TARGET=0
 fi
 (cd ${BUILDFOLDER} ; make -j 4)
 pwd

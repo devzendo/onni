@@ -2,8 +2,16 @@
 
 cmake_minimum_required(VERSION 3.13)
 
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 17)
+# https://lochnerweb.de/index.php/pico_unit_testing
+# BUILD_Target == 0 ==> pico
+# BUILD_Target == 1 ==> linux
+# BUILD_Target == 2 ==> test
+
+# Thanks to https://crascit.com/2015/03/28/enabling-cxx11-in-cmake/
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON) # Don't fall back to an earlier standard if the one declared isn't available
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Initialise pico_sdk from installed location
@@ -40,40 +48,72 @@ set(PICO_BOARD pico CACHE STRING "Board type")
 set(PICO_TINYUSB_PATH ${CMAKE_CURRENT_LIST_DIR}/libs/tinyusb)
 
 # Pull in Raspberry Pi Pico SDK (must be before project)
-include(pico_sdk_import.cmake)
+if(BUILD_TARGET EQUAL 0)
+    include(pico_sdk_import.cmake)
+    add_definitions(-DPICO)
+endif() 
 
 project(onni C CXX ASM)
 
-# Initialise the Raspberry Pi Pico SDK
-pico_sdk_init()
+# Firmware build.
+if(BUILD_TARGET EQUAL 0)
+    # Initialise the Raspberry Pi Pico SDK
+    pico_sdk_init()
 
-# Add executable. Default name is the project name, version 0.1
+    add_executable(onni)
 
-cmake_minimum_required(VERSION 3.13)
-
-add_executable(onni)
-
-target_sources(onni PUBLIC
+    target_sources(onni PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/src/main.c
         ${CMAKE_CURRENT_LIST_DIR}/src/cdc_app.c
         ${CMAKE_CURRENT_LIST_DIR}/src/uac2_app.c
         ${CMAKE_CURRENT_LIST_DIR}/src/usb_descriptors.c
         )
 
-# Make sure TinyUSB can find tusb_config.h
-target_include_directories(onni PUBLIC
+    # Make sure TinyUSB can find tusb_config.h
+    target_include_directories(onni PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/src)
 
-# In addition to pico_stdlib required for common PicoSDK functionality, add dependency on tinyusb_device
-# for TinyUSB device support and tinyusb_board for the additional board support library used by the example
-target_link_libraries(onni PUBLIC pico_stdlib pico_unique_id tinyusb_device tinyusb_board)
+    # In addition to pico_stdlib required for common PicoSDK functionality, add dependency on tinyusb_device
+    # for TinyUSB device support and tinyusb_board for the additional board support library used by the example
+    target_link_libraries(onni PUBLIC pico_stdlib pico_unique_id tinyusb_device tinyusb_board)
 
-# Uncomment this line to enable fix for Errata RP2040-E5 (the fix requires use of GPIO 15)
-#target_compile_definitions(onni PUBLIC PICO_RP2040_USB_DEVICE_ENUMERATION_FIX=1)
+    # Uncomment this line to enable fix for Errata RP2040-E5 (the fix requires use of GPIO 15)
+    #target_compile_definitions(onni PUBLIC PICO_RP2040_USB_DEVICE_ENUMERATION_FIX=1)
 
-pico_add_extra_outputs(onni)
+    pico_add_extra_outputs(onni)
 
-pico_enable_stdio_usb(onni 1)
-pico_enable_stdio_uart(onni 0)
+    pico_enable_stdio_usb(onni 1)
+    pico_enable_stdio_uart(onni 0)
+endif()
 
-# add url via pico_set_program_url
+
+# Unit testing...
+if(BUILD_TARGET EQUAL 2)
+    configure_file(CMakeLists.googletest.txt googletest-download/CMakeLists.txt)
+    execute_process(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
+        WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/googletest-download" )
+    execute_process(COMMAND "${CMAKE_COMMAND}" --build .
+        WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/googletest-download" )
+
+    # Prevent GoogleTest from overriding our compiler/linker options
+    # when building with Visual Studio
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+    # Add googletest directly to our build. This adds
+    # the following targets: gtest, gtest_main, gmock
+    # and gmock_main
+    add_subdirectory("${CMAKE_BINARY_DIR}/googletest-src"
+        "${CMAKE_BINARY_DIR}/googletest-build")
+
+    # Now simply link your own targets against gtest, gmock,
+    # etc. as appropriate
+   
+    include(CTest)
+    enable_testing()
+
+    # Dummy test to get started...
+    add_executable(testintro ${CMAKE_CURRENT_LIST_DIR}/src/testintro.cpp)
+    target_link_libraries(testintro gtest gmock_main)
+    add_test(NAME testintro COMMAND testintro)
+endif()
+

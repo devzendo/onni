@@ -47,7 +47,7 @@ I use Visual Studio Code (on macOS) connected remotely to a Linux Mint 21.3 (Ubu
 Or use Visual Studio Code directly on that PC.
 The project was set up using the Raspberry Pi Pico plugin.
 
-# Building
+# Development Setup
 Assuming a Linux host. Not catering for Windows building any time soon.
 
 Install the Pico SDK and toolchain:
@@ -70,10 +70,17 @@ Install the Pico SDK and toolchain:
       https://github.com/hathach/tinyusb/issues/1911
       I'm currently using commit 29ffd57237554b1f2339af543e3789ae04d3b29b (8 Mar 2025).
 
+# Building the firmware
 To build:
 `./build.sh clean`
 
-Subsequent builds can just do `./build.sh`
+Subsequent builds can just do `./build.sh` or (cd build && make)
+
+# Building unit tests
+`./buildtests.sh clean`
+
+To run the tests:
+`./runtests.sh` or (cd build && make && make test)
 
 # Deployment
 Usual Pi Pico steps, hold down BOOTSEL button, connect. File browser appears. Drag `build/onni.uf2`
@@ -106,6 +113,9 @@ Dhiru Kholia <dhiru.kholia@gmail.com>
 
 The project also uses the Raspberry Pi Pico SDK, which is 
 Copyright 2020 (c) 2020 Raspberry Pi (Trading) Ltd.
+
+Setup of googletest was greatly aided by at article at 
+https://lochnerweb.de/index.php/pico_unit_testing
 
 I gratefully acknowledge the example code by these authors, without whose efforts
 this project could not exist.
