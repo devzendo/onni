@@ -31,6 +31,7 @@
 #include "tusb.h"
 #include "usb_descriptors.h"
 #include "common.h"
+#include "hexdump.h"
 
 //--------------------------------------------------------------------+
 // MACRO CONSTANT TYPEDEF PROTOTYPES
@@ -64,7 +65,7 @@ extern uint32_t blink_interval_ms;
 // Helper for clock get requests
 static bool tud_audio_clock_get_request(uint8_t rhport, audio_control_request_t const *request)
 {
-  TU_LOG3("tud_audio_clock_get_request");
+  TU_LOG1("tud_audio_clock_get_request\r\n");
   TU_ASSERT(request->bEntityID == UAC2_ENTITY_CLOCK);
 
   if (request->bControlSelector == AUDIO_CS_CTRL_SAM_FREQ)
@@ -110,7 +111,7 @@ static bool tud_audio_clock_get_request(uint8_t rhport, audio_control_request_t 
 static bool tud_audio_clock_set_request(uint8_t rhport, audio_control_request_t const *request, uint8_t const *buf)
 {
   (void)rhport;
-  TU_LOG3("tud_audio_clock_set_request");
+  TU_LOG1("tud_audio_clock_set_request\r\n");
 
   TU_ASSERT(request->bEntityID == UAC2_ENTITY_CLOCK);
   TU_VERIFY(request->bRequest == AUDIO_CS_REQ_CUR);
@@ -136,7 +137,7 @@ static bool tud_audio_clock_set_request(uint8_t rhport, audio_control_request_t 
 // Helper for feature unit get requests
 static bool tud_audio_feature_unit_get_request(uint8_t rhport, audio_control_request_t const *request)
 {
-  TU_LOG3("tud_audio_feature_unit_get_request");
+  TU_LOG1("tud_audio_feature_unit_get_request\r\n");
   TU_ASSERT(request->bEntityID == UAC2_ENTITY_SPK_FEATURE_UNIT);
 
   if (request->bControlSelector == AUDIO_FU_CTRL_MUTE && request->bRequest == AUDIO_CS_REQ_CUR)
@@ -174,7 +175,7 @@ static bool tud_audio_feature_unit_get_request(uint8_t rhport, audio_control_req
 static bool tud_audio_feature_unit_set_request(uint8_t rhport, audio_control_request_t const *request, uint8_t const *buf)
 {
   (void)rhport;
-  TU_LOG3("tud_audio_feature_unit_set_request");
+  TU_LOG1("tud_audio_feature_unit_set_request\r\n");
 
   TU_ASSERT(request->bEntityID == UAC2_ENTITY_SPK_FEATURE_UNIT);
   TU_VERIFY(request->bRequest == AUDIO_CS_REQ_CUR);
@@ -214,7 +215,7 @@ static bool tud_audio_feature_unit_set_request(uint8_t rhport, audio_control_req
 // Invoked when audio class specific get request received for an entity
 bool tud_audio_get_req_entity_cb(uint8_t rhport, tusb_control_request_t const *p_request)
 {
-  TU_LOG3("tud_audio_get_req_entity_cb");
+  TU_LOG1("tud_audio_get_req_entity_cb\r\n");
   audio_control_request_t const *request = (audio_control_request_t const *)p_request;
 
   if (request->bEntityID == UAC2_ENTITY_CLOCK)
@@ -232,7 +233,7 @@ bool tud_audio_get_req_entity_cb(uint8_t rhport, tusb_control_request_t const *p
 // Invoked when audio class specific set request received for an entity
 bool tud_audio_set_req_entity_cb(uint8_t rhport, tusb_control_request_t const *p_request, uint8_t *buf)
 {
-  TU_LOG3("tud_audio_set_req_entity_cb");
+  TU_LOG1("tud_audio_set_req_entity_cb\r\n");
   audio_control_request_t const *request = (audio_control_request_t const *)p_request;
 
   if (request->bEntityID == UAC2_ENTITY_SPK_FEATURE_UNIT)
@@ -248,7 +249,7 @@ bool tud_audio_set_req_entity_cb(uint8_t rhport, tusb_control_request_t const *p
 bool tud_audio_set_itf_close_EP_cb(uint8_t rhport, tusb_control_request_t const * p_request)
 {
   (void)rhport;
-  TU_LOG3("tud_audio_set_itf_close_EP_cb");
+  TU_LOG1("tud_audio_set_itf_close_EP_cb\r\n");
   uint8_t const itf = tu_u16_low(tu_le16toh(p_request->wIndex));
   uint8_t const alt = tu_u16_low(tu_le16toh(p_request->wValue));
 
@@ -263,7 +264,7 @@ bool tud_audio_set_itf_close_EP_cb(uint8_t rhport, tusb_control_request_t const 
 bool tud_audio_set_itf_cb(uint8_t rhport, tusb_control_request_t const * p_request)
 {
   (void)rhport;
-  TU_LOG3("tud_audio_set_itf_cb");
+  TU_LOG1("tud_audio_set_itf_cb\r\n");
   uint8_t const itf = tu_u16_low(tu_le16toh(p_request->wIndex));
   uint8_t const alt = tu_u16_low(tu_le16toh(p_request->wValue));
 
@@ -282,6 +283,43 @@ bool tud_audio_set_itf_cb(uint8_t rhport, tusb_control_request_t const * p_reque
 
   return true;
 }
+// tud_audio_tx_done_pre_load_cb and tud_audio_rx_done_pre_read_cb are called repeatedly on connection.
+
+// I record in audacity and get:
+// tud_audio_set_itf_cb
+// tud_audio_get_req_entity_cb
+// tud_audio_clock_get_request
+// Clock get is valid 1
+// tud_audio_get_req_entity_cb
+// tud_audio_clock_get_request
+// Clock get current freq 44100
+// tud_audio_get_req_entity_cb
+// tud_audio_clock_get_request
+// Clock get is valid 1
+// tud_audio_tx_done_pre_load_cb
+// tud_audio_set_itf_cb
+// tud_audio_tx_done_pre_load_cb
+// tud_audio_tx_done_pre_load_cb
+// tud_audio_tx_done_pre_load_cb
+// tud_audio_tx_done_pre_load_cb
+// forever... until I stop recording, then:
+// tud_audio_set_itf_close_EP_cb
+// tud_audio_set_itf_cb
+
+
+#define max(a,b)             \
+({                           \
+    __typeof__ (a) _a = (a); \
+    __typeof__ (b) _b = (b); \
+    _a > _b ? _a : _b;       \
+})
+
+#define min(a,b)             \
+({                           \
+    __typeof__ (a) _a = (a); \
+    __typeof__ (b) _b = (b); \
+    _a < _b ? _a : _b;       \
+})
 
 // Audio received from the computer - send to the hardware interrupt via FIFOs. Trigger PTT around it.
 bool tud_audio_rx_done_pre_read_cb(uint8_t rhport, uint16_t n_bytes_received, uint8_t func_id, uint8_t ep_out, uint8_t cur_alt_setting)
@@ -290,8 +328,9 @@ bool tud_audio_rx_done_pre_read_cb(uint8_t rhport, uint16_t n_bytes_received, ui
   (void)func_id;
   (void)ep_out;
   (void)cur_alt_setting;
-  TU_LOG3("tud_audio_rx_done_pre_read_cb");
+  TU_LOG1("tud_audio_rx_done_pre_read_cb rhport=%d, func_id=%d, ep_out=%d, cur_alt_setting=%d, (%d) bytes received\r\n", rhport, func_id, ep_out, cur_alt_setting, n_bytes_received);
   spk_data_size = tud_audio_read(spk_buf, n_bytes_received);
+  hexdump((uint8_t *) spk_buf, min(sizeof(spk_buf), n_bytes_received));
   tud_audio_write(spk_buf, n_bytes_received);
 
   return true;
@@ -305,7 +344,7 @@ bool tud_audio_tx_done_pre_load_cb(uint8_t rhport, uint8_t itf, uint8_t ep_in, u
   (void)itf;
   (void)ep_in;
   (void)cur_alt_setting;
-  TU_LOG3("tud_audio_tx_done_pre_load_cb");
+  TU_LOG1("tud_audio_tx_done_pre_load_cb rhport=%d, itf=%d, ep_in=%d, cur_alt_setting=%d\r\n", rhport, itf, ep_in, cur_alt_setting);
   // This callback could be used to fill microphone data separately
   return true;
 }
