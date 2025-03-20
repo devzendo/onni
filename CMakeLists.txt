@@ -67,6 +67,7 @@ if(BUILD_TARGET EQUAL 0)
         ${CMAKE_CURRENT_LIST_DIR}/src/cdc_app.c
         ${CMAKE_CURRENT_LIST_DIR}/src/uac2_app.c
         ${CMAKE_CURRENT_LIST_DIR}/src/usb_descriptors.c
+        ${CMAKE_CURRENT_LIST_DIR}/src/hexdump.c
         )
 
     # Make sure TinyUSB can find tusb_config.h
