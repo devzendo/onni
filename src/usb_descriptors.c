@@ -93,9 +93,9 @@ uint8_t const * tud_descriptor_device_cb(void)
 
 // MJG: Knock out the third serial port, as three ports WITHOUT audio still causes lockups. Have asked on the TinyUSB issue tracker
 // in github whether three are possible. 
-// #define EPNUM_CDC_2_NOTIF 0x87
-// #define EPNUM_CDC_2_OUT   0x08
-// #define EPNUM_CDC_2_IN    0x88
+#define EPNUM_CDC_2_NOTIF 0x87
+#define EPNUM_CDC_2_OUT   0x08
+#define EPNUM_CDC_2_IN    0x88
 
 uint8_t const desc_configuration[] =
 {
@@ -112,7 +112,7 @@ uint8_t const desc_configuration[] =
     TUD_CDC_DESCRIPTOR(ITF_NUM_CDC_1, 7, EPNUM_CDC_1_NOTIF, 8, EPNUM_CDC_1_OUT, EPNUM_CDC_1_IN, 64),
 
     // 3rd CDC (diagnostics): Interface number, string index, EP notification address and size, EP data address (out, in) and size.
-    // TUD_CDC_DESCRIPTOR(ITF_NUM_CDC_2, 8, EPNUM_CDC_2_NOTIF, 8, EPNUM_CDC_2_OUT, EPNUM_CDC_2_IN, 64)
+    TUD_CDC_DESCRIPTOR(ITF_NUM_CDC_2, 8, EPNUM_CDC_2_NOTIF, 8, EPNUM_CDC_2_OUT, EPNUM_CDC_2_IN, 64)
 };
 
 // Invoked when received GET CONFIGURATION DESCRIPTOR
@@ -147,7 +147,7 @@ char const *string_desc_arr[] =
   "onni Microphone",             // 5: Audio Interface
   "onni Serial User Interface",  // 6: Serial Interface (user interface)
   "onni Serial KISS Modem",      // 7: Serial Interface (KISS modem)
-  // "onni Serial Diagnostics",     // 8: Serial Interface (diagnostics)
+  "onni Serial Diagnostics",     // 8: Serial Interface (diagnostics)
 };
 
 static uint16_t _desc_str[32 + 1];

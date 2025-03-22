@@ -61,7 +61,7 @@ extern "C" {
 #endif
 
 #ifndef CFG_TUSB_DEBUG
-#define CFG_TUSB_DEBUG        3
+#define CFG_TUSB_DEBUG        2
 #endif
 
 // Enable Device stack
@@ -94,7 +94,7 @@ extern "C" {
 #endif
 
 //------------- CLASS -------------//
-#define CFG_TUD_CDC               2
+#define CFG_TUD_CDC               3
 #define CFG_TUD_MSC               0
 #define CFG_TUD_HID               0
 #define CFG_TUD_MIDI              0
