@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.13)
 
 # https://lochnerweb.de/index.php/pico_unit_testing
 # BUILD_Target == 0 ==> pico
-# BUILD_Target == 1 ==> linux
+# BUILD_Target == 1 ==> linux (unused)
 # BUILD_Target == 2 ==> test
 
 # Thanks to https://crascit.com/2015/03/28/enabling-cxx11-in-cmake/
