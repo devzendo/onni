@@ -43,6 +43,11 @@ if (NOT EXISTS ${picoVscode})
 endif()
 
 set(PICO_BOARD pico CACHE STRING "Board type")
+if (NOT EXISTS ${picoVscode})
+    set(CMAKE_C_COMPILER /opt/local/bin/arm-none-eabi-gcc)
+    set(CMAKE_CXX_COMPILER /opt/local/bin/arm-none-eabi-g++)
+    set(PICOTOOL_FORCE_FETCH_FROM_GIT 1)
+endif()
 
 # Use the submodule of tinyusb in preference to that in the Raspberry Pi Pico SDK
 set(PICO_TINYUSB_PATH ${CMAKE_CURRENT_LIST_DIR}/libs/tinyusb)
