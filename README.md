@@ -117,5 +117,7 @@ Copyright 2020 (c) 2020 Raspberry Pi (Trading) Ltd.
 Setup of googletest was greatly aided by at article at 
 https://lochnerweb.de/index.php/pico_unit_testing
 
+Recording of packet audio in the `samples` directory from the WA8LMF TNCTest CD.
+
 I gratefully acknowledge the example code by these authors, without whose efforts
 this project could not exist.
