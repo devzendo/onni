@@ -55,3 +55,6 @@ nosetests.xml
 coverage.xml
 *,cover
 
+# Notebooks
+.ipynb_checkpoints
+
