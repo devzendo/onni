@@ -29,6 +29,7 @@ The audio interface acts as a sound card; the two serial ports are for:
 
 ## Project Status
 Started Nov 2024. Feasibility, building prototypes to reduce risk and develop understanding. 
+Experimenting with AX25 packet demodulation.
 
 ## What is the meaning of the name?
 Onni is a Finnish word, meaning happiness.
@@ -117,7 +118,8 @@ Copyright 2020 (c) 2020 Raspberry Pi (Trading) Ltd.
 Setup of googletest was greatly aided by at article at 
 https://lochnerweb.de/index.php/pico_unit_testing
 
-Recording of packet audio in the `samples` directory from the WA8LMF TNCTest CD.
+Recordings of packet audio in the `samples` directory from the WA8LMF TNCTest CD
+and Sivan Toledo's javAX25 project.
 
 I gratefully acknowledge the example code by these authors, without whose efforts
 this project could not exist.
