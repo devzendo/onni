@@ -64,7 +64,8 @@ def test_wavreader_open():
     
 def test_processing_waveform():
     counter = Counter()
-    afsk = AfskCorrelator((counter))
+    sample_rate = 44100
+    afsk = AfskCorrelator(sample_rate, (counter))
     sample_count = 0
     with WavReader(wav_filename) as wav:
         print(f"the type of wav is {type(wav)}")
