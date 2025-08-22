@@ -30,6 +30,7 @@ The audio interface acts as a sound card; the two serial ports are for:
 ## Project Status
 Started Nov 2024. Feasibility, building prototypes to reduce risk and develop understanding. 
 Experimenting with AX25 packet demodulation.
+Last updates in Aug 2025.
 
 ## What is the meaning of the name?
 Onni is a Finnish word, meaning happiness.
@@ -107,6 +108,7 @@ Mastodon: @M0CUV@mastodon.radio
 
 http://devzendo.github.io/onni
 
+# Acknowledgements and works used as sources/inspiration
 The code started from the `cdc_uac2` example of the TinyUSB project, whose code is
 Copyright (c) 2018-2023, Ha Thach (tinyusb.org),
 Angel Molina (angelmolinu@gmail.com), Jerzy Kasenberg,
@@ -120,6 +122,19 @@ https://lochnerweb.de/index.php/pico_unit_testing
 
 Recordings of packet audio in the `samples` directory from the WA8LMF TNCTest CD
 and Sivan Toledo's javAX25 project.
+
+The demodulator is based on Sivan Toledo's javAX25 demodulator. I've ported this
+to Python 3 in the experiments folder, to aid my understanding and experiment with
+it. If successful, I'll port it again to C++ for the embedded version.
+
+Sivan's article in QEX 'A High-Performance Sound Card AX.24 Modem', available at
+https://www.tau.ac.il/~stoledo/Bib/Pubs/QEX-JulAug-2012.pdf led me to his project
+at https://github.com/sivantoledo/javAX25 that I use (in ported form) here. 
+
+The book 'Digital Signal Processing: A practical guide for engineers and scientists'
+by Steven W. Smith (ISBN 0-7506-7444-X) has been invaluable in helping me understand
+these concepts. Highly recommended as an introduction to DSP. It is also available
+freely online at https://dspguide.com
 
 I gratefully acknowledge the example code by these authors, without whose efforts
 this project could not exist.

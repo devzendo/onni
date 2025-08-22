@@ -10,7 +10,7 @@ class WavReader:
     def __init__(self, filename):
         self.wav_file = wave.open(filename, 'rb')
         self.count = -1
-        print(f"there are {self.wav_file.getnframes} frames at {self.wav_file.getframerate} Hz")
+        print(f"there are {self.wav_file.getnframes()} frames at {self.wav_file.getframerate()} Hz")
 
     def __enter__(self):
         return self
@@ -51,7 +51,8 @@ class Counter(PacketObserver):
 def test_counter_observer():
     counter = Counter()
     assert counter.count == 0
-    afsk = AfskCorrelator((counter))
+    sample_rate = 44100
+    afsk = AfskCorrelator(sample_rate, (counter))
     afsk.notify_packet("imagine a packet")
     assert counter.count == 1
 
