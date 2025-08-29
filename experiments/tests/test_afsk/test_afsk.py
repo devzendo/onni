@@ -2,6 +2,7 @@ import array
 import pytest
 import wave
 from experiments.afsk import AfskCorrelator, PacketObserver
+from experiments.hexdump import hexdump
 
 wav_filename = "../samples/4Z1PF_3_MAXTRAC-mono-shortened.wav"
 #wav_filename = "../samples/01_40-Mins-Traffic-on-144.39.wav"
@@ -46,6 +47,7 @@ class Counter(PacketObserver):
         
     def notify(self, packet):
         print(f"got a packet {packet}")
+        hexdump(packet, len(packet))
         self.count+=1
         
 def test_counter_observer():

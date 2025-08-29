@@ -67,11 +67,15 @@ class Packet:
             return False
 
     def bytes_without_crc(self):
-        return self.packet[:-2]
+        #return self.packet[:-2]
+        return self.packet[:self.size]
     
     def bytes_with_crc(self):
         return self.packet[:]
 
+    def __len__(self):
+        return self.size
+    
     def add_byte(self, byte):
         if self.size >= MAX_FRAME_SIZE:
             return False

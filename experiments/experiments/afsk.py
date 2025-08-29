@@ -168,14 +168,14 @@ class AfskCorrelator:
             self.last_transition = self.t
 
             bits = int(java_round(float(p) / self.samples_per_bit))
-            print("$ %f %d" % (float(p) / self.samples_per_bit, bits))
+            #print("$ %f %d" % (float(p) / self.samples_per_bit, bits))
 
             # collect statistics
             if (fdiff < 0): # last period was high, meaning f0
                 self.f0_period_count += 1
                 self.f0_max += self.f0_current_max
                 err = float(abs(bits - (float(p) / self.samples_per_bit)))
-                print(")) %.02f %d %.02f\n" % (float(p) / self.samples_per_bit, bits, err))
+                #print(")) %.02f %d %.02f\n" % (float(p) / self.samples_per_bit, bits, err))
                 if (err > self.max_period_error):
                     self.max_period_error = err
 
@@ -185,7 +185,7 @@ class AfskCorrelator:
                 self.f1_period_count += 1
                 self.f1_min += self.f1_current_min
                 err = float(abs(bits - (float(p) / self.samples_per_bit)))
-                print(")) %.02f %d %.02f\n" % (float(p) / self.samples_per_bit, bits, err))
+                #print(")) %.02f %d %.02f\n" % (float(p) / self.samples_per_bit, bits, err))
                 if (err > self.max_period_error):
                     self.max_period_error = err
 
@@ -218,7 +218,7 @@ class AfskCorrelator:
                             if (self.packet is not None and self.packet.terminate()):
                                 self.statistics_finalize()
                                 # packet.statistics(new float[] { emphasis, f0_max / -f1_min, max_period_error });
-                                print("%.02f:%.02f\n" % (self.f0_max / -self.f1_min, self.max_period_error))
+                                #print("%.02f:%.02f\n" % (self.f0_max / -self.f1_min, self.max_period_error))
                                 self.decode_count += 1
                                 print(f"decode count: {self.decode_count}: {self.packet}")
                                 self.notify_packet(self.packet.bytes_without_crc())
@@ -252,7 +252,7 @@ class AfskCorrelator:
                                 if not self.packet.add_byte(self.data):
                                     self.state = State.WAITING
                                     self.data_carrier = False
-                                # System.out.printf(">>> %02x %c %c\n", data, (char)data, (char)(data>>1));
+                                #print(">>> %02x %c %c\n" % (self.data, chr(self.data), chr(self.data>>1)))
                                 self.data = 0
                                 self.bitcount = 0
                         if bits - 1 != 5: # the zero after the ones is not a stuffing
@@ -265,7 +265,7 @@ class AfskCorrelator:
                                 if not self.packet.add_byte(self.data):
                                     self.state = State.WAITING
                                     self.data_carrier = False
-                                # System.out.printf(">>> %02x %c %c\n", data, (char)data, (char)(data>>1));
+                                #print(">>> %02x %c %c\n" % (self.data, chr(self.data), chr(self.data>>1)))
                                 self.data = 0
                                 self.bitcount = 0
         # if previous_fdiff * fdiff < 0 or previous_fdiff == 0
