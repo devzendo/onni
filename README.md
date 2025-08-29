@@ -72,13 +72,27 @@ Install the Pico SDK and toolchain:
       https://github.com/hathach/tinyusb/issues/1911
       I'm currently using commit 29ffd57237554b1f2339af543e3789ae04d3b29b (8 Mar 2025).
 
-# Building the firmware
+# Building
+This project is developed with Test-Driven Development, to the maximum extent possible,
+whilst being pragmatic. There are several parts that are tested manually - USB interaction
+mostly - with the aim that the rest of the system is tested. The goal is that if the tests
+pass, the product can be shipped.
+
+The tests are built and run on the host computer, so, using the desktop Linux C++ compiler,
+GoogleTest, and C++ standard library.
+
+The firmware builds using the ARM GCC compiler and Pico SDK; it gets deployed to a Pico.
+
+You can build either - but not both - at the same time. You'll need to clean out/rebuild
+the CMake build tree when switching. 
+
+## Building the firmware
 To build:
 `./build.sh clean`
 
 Subsequent builds can just do `./build.sh` or (cd build && make)
 
-# Building unit tests
+## Building unit tests
 `./buildtests.sh clean`
 
 To run the tests:
