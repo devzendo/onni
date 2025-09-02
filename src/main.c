@@ -68,6 +68,14 @@ int main(void)
 
   TU_LOG1("CDC UAC2 example running\r\n");
 
+  // TODO instantiate AX25 stack (PacketReceiver)
+  // TODO instantiate Packet asynchronous dispatcher (PacketReceiver with a queue)
+  // TODO wire async dispatcher to stack so the stack receives packets asynchronously
+  // TODO instantiate AFSK demodulator (SampleReceiver)
+  // TODO wire demodulator to async dispatcher so packets demodulated in the ISR are 
+  // enqueued
+  // TODO wire demodulator to the sample receiver so samples are given to it by the ISR
+  // TODO start sample receiver
   while (1)
   {
     tud_task(); // TinyUSB device task
