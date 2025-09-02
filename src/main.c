@@ -36,7 +36,28 @@
 #include "pico/stdlib.h"
 #endif
 
+#include "adc_timer.h"
+
 uint32_t blink_interval_ms = BLINK_NOT_MOUNTED;
+
+// Example callback function that processes ADC readings
+void process_adc_sample(uint16_t adc_value) {
+  // Convert 12-bit ADC value to voltage (assuming 3.3V reference)
+  float voltage = (adc_value * 3.3f) / 4095.0f;
+  
+  // For demonstration, we'll just toggle the onboard LED based on voltage threshold
+  static bool led_state = false;
+  if (voltage > 1.65f) {  // Above half of 3.3V
+    board_led_write(true);
+    led_state = true;
+  } else {
+    board_led_write(false);
+    led_state = false;
+  }
+  
+  // You could also store samples in a buffer, perform DSP, etc.
+}
+
 
 //--------------------------------------------------------------------+
 // BLINKING TASK
@@ -67,6 +88,16 @@ int main(void)
 #endif
 
   TU_LOG1("CDC UAC2 example running\r\n");
+
+  // Set up the ADC callback function
+  set_adc_callback(process_adc_sample);
+    
+  // Initialize ADC and timer
+  setup_adc_timer();
+    
+  printf("44.1kHz ADC sampling started on GPIO %d\n", adc_pin());
+  printf("Connect a signal to GPIO %d to see the LED respond\n", adc_pin());
+    
 
   // TODO instantiate AX25 stack (PacketReceiver)
   // TODO instantiate Packet asynchronous dispatcher (PacketReceiver with a queue)

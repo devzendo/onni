@@ -72,6 +72,7 @@ if(BUILD_TARGET EQUAL 0)
         ${CMAKE_CURRENT_LIST_DIR}/src/cdc_app.c
         ${CMAKE_CURRENT_LIST_DIR}/src/uac2_app.c
         ${CMAKE_CURRENT_LIST_DIR}/src/usb_descriptors.c
+        ${CMAKE_CURRENT_LIST_DIR}/src/adc_timer.c
         ${CMAKE_CURRENT_LIST_DIR}/src/hexdump.c
         )
 
@@ -81,7 +82,7 @@ if(BUILD_TARGET EQUAL 0)
 
     # In addition to pico_stdlib required for common PicoSDK functionality, add dependency on tinyusb_device
     # for TinyUSB device support and tinyusb_board for the additional board support library used by the example
-    target_link_libraries(onni PUBLIC pico_stdlib pico_unique_id tinyusb_device tinyusb_board)
+    target_link_libraries(onni PUBLIC pico_stdlib pico_unique_id tinyusb_device tinyusb_board hardware_adc)
 
     # Uncomment this line to enable fix for Errata RP2040-E5 (the fix requires use of GPIO 15)
     #target_compile_definitions(onni PUBLIC PICO_RP2040_USB_DEVICE_ENUMERATION_FIX=1)
